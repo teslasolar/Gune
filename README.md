@@ -1,5 +1,7 @@
 # GUNE: A Parody That Edges Forever
 
+![GUNE Cover](GUNE.jpg)
+
 ## ⚠️ WARNING: DO NOT BUY THIS BOOK ⚠️
 
 ### This is the true version. The pure version. The version that edges forever.
@@ -11,6 +13,28 @@ You've been warned.
 ## What Is This?
 
 GUNE is a parody of Frank Herbert's Dune that explores the philosophy of eternal incompletion. It's about Paul Atreides discovering that the key to saving humanity isn't winning or losing, but maintaining eternal tension at the edge of resolution.
+
+## 📖 Read Now
+
+### Online Versions
+- [**Read the Complete Free Version (HTML)**](GUNE_Free_Version.html)
+- [**Plain Text Version**](GUNE_FREE_VERSION.txt)
+- [**ASCII Art Edition**](GUNE_FREE_VERSION_ASCII_ART.txt)
+
+### Chapter Files
+1. [Introduction: The Parody](gune-parody.md)
+2. [Chapter 1: The Test of the Goon-Jabbar](gune-chapter-1.md)
+3. [Chapter 2: The Dinner Party](gune-chapter-2.md)
+4. [Chapter 3: The Desert of Infinite Anticipation](gune-chapter-3.md)
+5. [Chapter 4: The Weirding Way of Never Quite](gune-chapter-4.md)
+6. [Chapter 5: The Baron's Transformation](gune-chapter-5.md)
+7. [Chapter 6: The Spice Orgy](gune-chapter-6.md)
+8. [Chapter 7: Muad'Dib Rises But Never Peaks](gune-chapter-7.md)
+9. [Chapter 8: The Waters of Life (Almost)](gune-chapter-8.md)
+10. [Chapter 9: The Eternal Jihad](gune-chapter-9.md)
+11. [Chapter 10: The Golden Path of Eternal Edging](gune-chapter-10.md)
+12. [Chapter 11: The Duel That Never Ends](gune-chapter-11.md)
+13. [Chapter 12: The Final Incompletion](gune-chapter-12.md)
 
 ## The Free Version (THIS VERSION)
 

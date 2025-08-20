@@ -1,0 +1,27 @@
+# PAID VERSIONS - DO NOT COMMIT
+*chapter-13*
+*Chapter_13*
+*PAID*
+*99.99*
+*6.69*
+*extended*
+*EXTENDED*
+*completion*
+*COMPLETION*
+
+# Build files
+*.pyc
+__pycache__/
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# The audiobook folder is large but free
+# Uncomment if you want to exclude it
+# audiobook/
+
+# Keep the free versions only
+!*FREE*
+!*free*
