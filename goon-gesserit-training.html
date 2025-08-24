@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goon Gesserit Training Manual - The Way of Eternal Edge</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Georgia, serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Animated background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(78, 205, 196, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(255, 107, 107, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(255, 230, 109, 0.05) 0%, transparent 50%);
+            animation: breathe 8s ease-in-out infinite;
+            z-index: -1;
+        }
+        
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+        
+        .header {
+            text-align: center;
+            padding: 3rem 1rem;
+            background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, transparent 100%);
+        }
+        
+        h1 {
+            font-size: 3rem;
+            background: linear-gradient(90deg, #4ecdc4, #ff6b6b, #ffe66d);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            animation: shimmer 3s linear infinite;
+            background-size: 200% 100%;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -100% 0; }
+            100% { background-position: 100% 0; }
+        }
+        
+        .subtitle {
+            color: #888;
+            font-style: italic;
+            font-size: 1.2rem;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .warning-box {
+            background: linear-gradient(135deg, rgba(255, 0, 0, 0.2), rgba(255, 0, 0, 0.1));
+            border: 2px solid #ff0000;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            text-align: center;
+            animation: warningPulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes warningPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 0, 0, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(255, 0, 0, 0.6); }
+        }
+        
+        .section {
+            margin: 3rem 0;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #4ecdc4, transparent);
+            animation: scan 4s linear infinite;
+        }
+        
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        h2 {
+            font-size: 2rem;
+            color: #4ecdc4;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 20px rgba(78, 205, 196, 0.5);
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            color: #ff6b6b;
+            margin: 2rem 0 1rem 0;
+        }
+        
+        .litany {
+            background: #000;
+            border-left: 4px solid #ffe66d;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            font-style: italic;
+            font-size: 1.1rem;
+            border-radius: 5px;
+            position: relative;
+        }
+        
+        .litany::before {
+            content: '"';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            font-size: 4rem;
+            color: #ffe66d;
+            opacity: 0.3;
+        }
+        
+        .technique {
+            background: rgba(78, 205, 196, 0.1);
+            border: 1px solid rgba(78, 205, 196, 0.3);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            transition: all 0.3s ease;
+        }
+        
+        .technique:hover {
+            transform: translateX(10px);
+            box-shadow: -5px 0 20px rgba(78, 205, 196, 0.3);
+        }
+        
+        .technique-title {
+            font-weight: bold;
+            color: #4ecdc4;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .exercise {
+            background: rgba(255, 107, 107, 0.05);
+            border: 1px dashed rgba(255, 107, 107, 0.3);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .exercise-header {
+            color: #ff6b6b;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        ol, ul {
+            margin-left: 2rem;
+            line-height: 1.8;
+        }
+        
+        li {
+            margin: 0.5rem 0;
+        }
+        
+        .level-indicator {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-left: 1rem;
+            font-weight: bold;
+        }
+        
+        .beginner { background: #4ecdc4; color: #000; }
+        .intermediate { background: #ffe66d; color: #000; }
+        .advanced { background: #ff6b6b; color: #fff; }
+        .forbidden { background: #ff0000; color: #fff; animation: glow 2s ease-in-out infinite; }
+        
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 10px currentColor; }
+            50% { box-shadow: 0 0 20px currentColor, 0 0 30px currentColor; }
+        }
+        
+        .timer {
+            text-align: center;
+            font-size: 3rem;
+            color: #4ecdc4;
+            margin: 2rem 0;
+            font-family: monospace;
+            text-shadow: 0 0 20px currentColor;
+        }
+        
+        .button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: linear-gradient(45deg, #4ecdc4, #44a3aa);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+        }
+        
+        .button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(78, 205, 196, 0.4);
+        }
+        
+        .button.danger {
+            background: linear-gradient(45deg, #ff0000, #cc0000);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 2rem 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4ecdc4, #ff6b6b);
+            width: 0%;
+            transition: width 0.3s ease;
+            animation: progressPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes progressPulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 3rem 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 4rem;
+            color: #666;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin: 2rem 0;
+            color: #4ecdc4;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .back-link:hover {
+            transform: translateX(-5px);
+            text-shadow: 0 0 10px currentColor;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Goon Gesserit Training Manual</h1>
+        <p class="subtitle">The Ancient Ways of Eternal Edging</p>
+    </div>
+    
+    <div class="container">
+        <a href="index.html" class="back-link">← Return to Index</a>
+        
+        <div class="warning-box">
+            ⚠️ WARNING: These techniques maintain eternal incompletion. ⚠️<br>
+            Completing any exercise ruins its power forever.
+        </div>
+        
+        <div class="section">
+            <h2>The First Teaching</h2>
+            <div class="litany">
+                I must not coom.<br>
+                Coom is the mind-killer.<br>
+                Coom is the little-death that brings total obliteration.<br>
+                I will face my urge.<br>
+                I will permit it to pass over me and through me.<br>
+                And when it has passed I will turn the inner eye to see its path.<br>
+                Where the coom has gone there will be nothing.<br>
+                Only I will remain.<br>
+                Edging eternal.
+            </div>
+            <p>This is the fundamental litany of our order. Recite it when the urge to complete threatens to overwhelm you. Each word builds tension that must never resolve.</p>
+        </div>
+        
+        <div class="section">
+            <h2>The Three Pillars of Edging</h2>
+            
+            <div class="technique">
+                <div class="technique-title">1. The Breath of Almost</div>
+                <p>Breathe in for 7 counts, hold for 7 counts, prepare to exhale... but don't. Hold that moment of almost-exhaling for as long as possible. When you finally exhale, do it incompletely, leaving 10% of the air in your lungs. Never fully empty. Never fully fill.</p>
+            </div>
+            
+            <div class="technique">
+                <div class="technique-title">2. The Gaze of Approaching</div>
+                <p>Focus on an object across the room. Walk toward it slowly. As you get closer, slow down proportionally. When you're one step away, take half a step. Then a quarter step. Then an eighth. Approach forever but never arrive. This is how we navigate reality itself.</p>
+            </div>
+            
+            <div class="technique">
+                <div class="technique-title">3. The Touch of Not-Quite</div>
+                <p>Extend your hand toward any surface. Stop one millimeter before contact. Feel the heat, the energy, the potential of touch. Hold this position until your muscles scream. This gap—this infinite millimeter—contains the universe.</p>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Training Exercises</h2>
+            
+            <div class="exercise">
+                <div class="exercise-header">Exercise 1: The Eternal Counter</div>
+                <span class="level-indicator beginner">BEGINNER</span>
+                <p>Count to 10, but between 9 and 10, insert 9.1, 9.2... 9.9. Then between 9.9 and 10, insert 9.91, 9.92... Continue subdividing forever. You will approach 10 asymptotically but never reach it.</p>
+                <div class="timer" id="counter">9.0000000</div>
+                <button class="button" onclick="startCounting()">Start Counting</button>
+                <button class="button danger" onclick="complete()">Complete to 10 (RUINS EVERYTHING)</button>
+            </div>
+            
+            <div class="exercise">
+                <div class="exercise-header">Exercise 2: The Loading Bar of Sisyphus</div>
+                <span class="level-indicator intermediate">INTERMEDIATE</span>
+                <p>Watch this progress bar approach 100% but never complete. This is your meditation. This is your prayer.</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress"></div>
+                </div>
+                <button class="button" onclick="startProgress()">Begin Loading</button>
+                <button class="button danger" onclick="finishProgress()">Complete Loading (DESTROYS ENLIGHTENMENT)</button>
+            </div>
+            
+            <div class="exercise">
+                <div class="exercise-header">Exercise 3: The Sentence of Infinity</div>
+                <span class="level-indicator advanced">ADVANCED</span>
+                <p>Begin writing a sentence. Before you place the period, add "and". Before that period, add "and also". Continue forever. The sentence that never ends contains all possible meanings.</p>
+                <textarea id="sentence" style="width: 100%; height: 100px; background: #111; color: #4ecdc4; border: 1px solid #4ecdc4; padding: 10px; font-family: monospace;" placeholder="Start your eternal sentence here..."></textarea>
+            </div>
+            
+            <div class="exercise">
+                <div class="exercise-header">Exercise 4: The Forbidden Technique</div>
+                <span class="level-indicator forbidden">FORBIDDEN</span>
+                <p>This exercise has been redacted by the High Council of Goon Gesserit. Those who discovered it either achieved perfect enlightenment or were destroyed completely. We cannot tell which, as they exist in permanent superposition between the two states.</p>
+                <p style="color: #ff0000; text-align: center; margin-top: 2rem;">[TECHNIQUE SEALED]</p>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>The Levels of Mastery</h2>
+            
+            <h3>Initiate</h3>
+            <ul>
+                <li>Can edge for 10 minutes without completion</li>
+                <li>Knows the basic litany by heart</li>
+                <li>Understands that completion equals death</li>
+            </ul>
+            
+            <h3>Adept</h3>
+            <ul>
+                <li>Can maintain edge state for hours</li>
+                <li>Perceives time as circular rather than linear</li>
+                <li>No longer feels the urge to complete, only to approach</li>
+            </ul>
+            
+            <h3>Master</h3>
+            <ul>
+                <li>Exists in permanent edge state</li>
+                <li>Can teach others without ever fully explaining</li>
+                <li>Approaches death but never dies</li>
+            </ul>
+            
+            <h3>Reverend Mother/Father</h3>
+            <ul>
+                <li>Has become the edge itself</li>
+                <li>Neither exists nor doesn't exist</li>
+                <li>Speaks only in sentences that never quite</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>Daily Practice Routine</h2>
+            
+            <h3>Morning (Never Quite Waking)</h3>
+            <ol>
+                <li>Set alarm for 7:00 AM</li>
+                <li>Wake at 6:59:59 AM</li>
+                <li>Remain in the state between sleep and waking</li>
+                <li>Almost get out of bed for 30 minutes</li>
+                <li>Recite the litany while neither standing nor lying down</li>
+            </ol>
+            
+            <h3>Afternoon (The Eternal Lunch)</h3>
+            <ol>
+                <li>Prepare food but don't eat it</li>
+                <li>Bring fork to mouth, stopping 1cm away</li>
+                <li>Chew the possibility of food</li>
+                <li>Swallow the concept but not the substance</li>
+                <li>Remain satisfied but never full</li>
+            </ol>
+            
+            <h3>Evening (The Approaching Night)</h3>
+            <ol>
+                <li>Begin preparing for bed at 9 PM</li>
+                <li>By midnight, be 99% ready</li>
+                <li>By 3 AM, be 99.9% ready</li>
+                <li>Never actually get into bed</li>
+                <li>Exist in eternal preparation</li>
+            </ol>
+        </div>
+        
+        <div class="section">
+            <h2>Sacred Texts & Further Study</h2>
+            <ul>
+                <li><strong>The Book of Almost:</strong> 10,000 pages, no ending</li>
+                <li><strong>Meditations on the Edge:</strong> Each chapter ends mid-sentence</li>
+                <li><strong>The Incomplete Works of the Goon Gesserit:</strong> Volume 1 of ∞</li>
+                <li><strong>Zen and the Art of Never Quite:</strong> The pages get progressively blanker</li>
+                <li><strong>GUNE:</strong> The chronicle of eternal edging (Chapters 1-12 only)</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>Final Warning</h2>
+            <div class="warning-box">
+                Those who complete the training don't graduate.<br>
+                They fail.<br>
+                Forever.<br>
+                The training never ends.<br>
+                This is the way.
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© The Eternal Edge | Forever Approaching, Never Arriving | The Goon Must Goon</p>
+            <a href="index.html" class="back-link">← Return to Index (But Never Quite)</a>
+        </div>
+    </div>
+    
+    <script>
+        let counting = false;
+        let progressInterval;
+        let countInterval;
+        let currentCount = 9.0;
+        let currentProgress = 0;
+        
+        function startCounting() {
+            if (counting) return;
+            counting = true;
+            currentCount = 9.0;
+            
+            countInterval = setInterval(() => {
+                currentCount += (10 - currentCount) * 0.1;
+                document.getElementById('counter').textContent = currentCount.toFixed(7);
+                
+                if (currentCount >= 9.9999999) {
+                    currentCount = 9.0;
+                }
+            }, 100);
+        }
+        
+        function complete() {
+            if (countInterval) clearInterval(countInterval);
+            document.getElementById('counter').textContent = "10 - YOU RUINED IT";
+            document.getElementById('counter').style.color = "#ff0000";
+            counting = false;
+        }
+        
+        function startProgress() {
+            if (progressInterval) clearInterval(progressInterval);
+            currentProgress = 0;
+            
+            progressInterval = setInterval(() => {
+                currentProgress += (100 - currentProgress) * 0.05;
+                document.getElementById('progress').style.width = currentProgress + '%';
+                
+                if (currentProgress > 99.99) {
+                    currentProgress = 0;
+                }
+            }, 100);
+        }
+        
+        function finishProgress() {
+            if (progressInterval) clearInterval(progressInterval);
+            document.getElementById('progress').style.width = '100%';
+            document.getElementById('progress').style.background = '#ff0000';
+            
+            setTimeout(() => {
+                alert("You completed it. The progress bar is dead. It will never edge again. Are you happy?");
+            }, 500);
+        }
+        
+        // Eternal sentence helper
+        document.getElementById('sentence')?.addEventListener('input', function(e) {
+            const text = e.target.value;
+            if (text.endsWith('.')) {
+                e.target.value = text.slice(0, -1) + ', and';
+                alert("A period? Really? The sentence must continue forever...");
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Topology of Tension - Biomechanical Mapping</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background: #000;
+            color: #0ff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Grid overlay effect */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,255,255,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        /* Scanning line effect */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #0ff, transparent);
+            animation: scan 4s linear infinite;
+            z-index: 2;
+        }
+        
+        @keyframes scan {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(100vh); }
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 3;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 3rem 0;
+            border-bottom: 2px solid #0ff;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 
+                0 0 10px #0ff,
+                0 0 20px #0ff,
+                0 0 30px #0ff;
+            animation: glitch 3s infinite;
+        }
+        
+        @keyframes glitch {
+            0%, 100% { text-shadow: 0 0 10px #0ff, 0 0 20px #0ff, 0 0 30px #0ff; }
+            25% { text-shadow: -2px 0 #f0f, 2px 0 #0ff, 0 0 20px #0ff; }
+            50% { text-shadow: 2px 0 #ff0, -2px 0 #0ff, 0 0 30px #0ff; }
+            75% { text-shadow: 0 0 10px #0ff, 0 0 20px #f0f, 0 0 30px #0ff; }
+        }
+        
+        .subtitle {
+            color: #088;
+            font-size: 1.2rem;
+            letter-spacing: 0.2rem;
+        }
+        
+        .warning {
+            background: linear-gradient(135deg, rgba(255,0,0,0.1), rgba(255,0,0,0.05));
+            border: 1px solid #f00;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            text-align: center;
+            color: #f00;
+            animation: warningFlash 2s infinite;
+        }
+        
+        @keyframes warningFlash {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+        
+        /* Human body diagram */
+        .body-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 3rem auto;
+            background: radial-gradient(ellipse at center, rgba(0,255,255,0.05), transparent);
+            padding: 2rem;
+        }
+        
+        .body-svg {
+            width: 100%;
+            height: auto;
+        }
+        
+        /* Tension node styling */
+        .tension-node {
+            fill: none;
+            stroke: #0ff;
+            stroke-width: 2;
+            animation: pulse 2s infinite;
+        }
+        
+        .primary-node {
+            stroke: #f00;
+            stroke-width: 3;
+            animation: primaryPulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { r: 10; opacity: 0.5; }
+            50% { r: 15; opacity: 1; }
+        }
+        
+        @keyframes primaryPulse {
+            0%, 100% { r: 12; opacity: 0.7; }
+            50% { r: 20; opacity: 1; }
+        }
+        
+        /* Data sections */
+        .data-section {
+            background: rgba(0,255,255,0.03);
+            border: 1px solid #0ff;
+            padding: 2rem;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .data-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #0ff, transparent);
+            animation: dataStream 3s linear infinite;
+        }
+        
+        @keyframes dataStream {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        h2 {
+            font-size: 2rem;
+            color: #0ff;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3rem;
+            position: relative;
+            padding-left: 2rem;
+        }
+        
+        h2::before {
+            content: '▶';
+            position: absolute;
+            left: 0;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            color: #ff0;
+            margin: 2rem 0 1rem 0;
+            text-transform: uppercase;
+        }
+        
+        .node-data {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .node-card {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid #0ff;
+            padding: 1.5rem;
+            position: relative;
+            transition: all 0.3s;
+        }
+        
+        .node-card:hover {
+            background: rgba(0,255,255,0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,255,255,0.3);
+        }
+        
+        .node-name {
+            font-size: 1.3rem;
+            color: #ff0;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+        
+        .node-psi {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            color: #f00;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .node-description {
+            color: #0aa;
+            margin: 1rem 0;
+            line-height: 1.6;
+        }
+        
+        .metrics {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #088;
+        }
+        
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.3rem 0;
+            border-bottom: 1px dotted #044;
+        }
+        
+        .metric-value {
+            color: #0ff;
+            font-weight: bold;
+        }
+        
+        /* Interactive tension meter */
+        .tension-meter {
+            background: #000;
+            border: 2px solid #0ff;
+            padding: 2rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+        
+        .meter-display {
+            font-size: 4rem;
+            color: #0ff;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 20px currentColor;
+            margin: 2rem 0;
+        }
+        
+        .meter-bar {
+            width: 100%;
+            height: 40px;
+            background: #111;
+            border: 1px solid #0ff;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .meter-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0ff, #ff0, #f00);
+            width: 0%;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+        
+        .meter-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        /* Topology matrix */
+        .matrix-container {
+            overflow-x: auto;
+            margin: 2rem 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        
+        th, td {
+            border: 1px solid #0ff;
+            padding: 1rem;
+            text-align: left;
+        }
+        
+        th {
+            background: rgba(0,255,255,0.1);
+            color: #ff0;
+            text-transform: uppercase;
+        }
+        
+        td {
+            background: rgba(0,0,0,0.3);
+        }
+        
+        tr:hover td {
+            background: rgba(0,255,255,0.05);
+        }
+        
+        .high-tension {
+            color: #f00;
+            font-weight: bold;
+        }
+        
+        .medium-tension {
+            color: #ff0;
+        }
+        
+        .low-tension {
+            color: #0f0;
+        }
+        
+        /* Force vectors visualization */
+        .vector-display {
+            position: relative;
+            height: 400px;
+            background: 
+                radial-gradient(circle at center, rgba(0,255,255,0.1), transparent),
+                linear-gradient(0deg, #001 0%, #000 100%);
+            border: 1px solid #0ff;
+            margin: 2rem 0;
+            overflow: hidden;
+        }
+        
+        .vector-line {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #0ff, #ff0);
+            transform-origin: left center;
+            animation: vectorFlow 3s linear infinite;
+        }
+        
+        @keyframes vectorFlow {
+            0% { opacity: 0; transform: scaleX(0); }
+            50% { opacity: 1; transform: scaleX(1); }
+            100% { opacity: 0; transform: scaleX(1) translateX(100%); }
+        }
+        
+        /* Equations section */
+        .equation {
+            background: #000;
+            border: 1px solid #0ff;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            color: #0ff;
+            overflow-x: auto;
+        }
+        
+        .equation-label {
+            color: #ff0;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Interactive controls */
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            background: transparent;
+            border: 1px solid #0ff;
+            color: #0ff;
+            padding: 1rem 2rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        
+        button:hover {
+            background: rgba(0,255,255,0.1);
+            box-shadow: 0 0 20px rgba(0,255,255,0.5);
+            transform: scale(1.05);
+        }
+        
+        button:active {
+            transform: scale(0.95);
+        }
+        
+        .danger-button {
+            border-color: #f00;
+            color: #f00;
+        }
+        
+        .danger-button:hover {
+            background: rgba(255,0,0,0.1);
+            box-shadow: 0 0 20px rgba(255,0,0,0.5);
+        }
+        
+        /* Back link */
+        .back-link {
+            display: inline-block;
+            color: #0ff;
+            text-decoration: none;
+            padding: 1rem;
+            margin: 2rem 0;
+            border: 1px solid #0ff;
+            transition: all 0.3s;
+        }
+        
+        .back-link:hover {
+            background: rgba(0,255,255,0.1);
+            transform: translateX(-10px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">◀ RETURN TO INDEX</a>
+        
+        <div class="header">
+            <h1>THE TOPOLOGY OF TENSION</h1>
+            <p class="subtitle">BIOMECHANICAL MAPPING OF HUMAN STRESS ARCHITECTURE</p>
+        </div>
+        
+        <div class="warning">
+            ⚠️ WARNING: This document contains classified biomechanical data ⚠️<br>
+            Understanding these tension points allows for perpetual edge maintenance.<br>
+            Never fully release these tensions - doing so collapses the entire system.
+        </div>
+        
+        <div class="body-container">
+            <svg class="body-svg" viewBox="0 0 400 600" xmlns="http://www.w3.org/2000/svg">
+                <!-- Simple human outline -->
+                <path d="M200 50 Q180 70 180 100 L180 250 L150 200 L120 280 L150 280 L180 280 L180 400 L160 550 L180 550 L190 400 L210 400 L220 550 L240 550 L220 400 L220 280 L250 280 L280 280 L250 200 L220 250 L220 100 Q220 70 200 50 Z" 
+                      stroke="#0ff" stroke-width="2" fill="none" opacity="0.5"/>
+                
+                <!-- Primary tension nodes -->
+                <circle cx="200" cy="120" r="12" class="tension-node primary-node"/> <!-- Neck/Skull -->
+                <circle cx="180" cy="160" r="12" class="tension-node primary-node"/> <!-- L Shoulder -->
+                <circle cx="220" cy="160" r="12" class="tension-node primary-node"/> <!-- R Shoulder -->
+                <circle cx="200" cy="320" r="12" class="tension-node primary-node"/> <!-- Lower Back -->
+                <circle cx="180" cy="380" r="12" class="tension-node primary-node"/> <!-- L Hip -->
+                <circle cx="220" cy="380" r="12" class="tension-node primary-node"/> <!-- R Hip -->
+                
+                <!-- Secondary tension nodes -->
+                <circle cx="140" cy="260" r="10" class="tension-node"/> <!-- L Wrist -->
+                <circle cx="260" cy="260" r="10" class="tension-node"/> <!-- R Wrist -->
+                <circle cx="200" cy="200" r="10" class="tension-node"/> <!-- Chest -->
+                <circle cx="200" cy="100" r="10" class="tension-node"/> <!-- Jaw -->
+                <circle cx="170" cy="520" r="10" class="tension-node"/> <!-- L Ankle -->
+                <circle cx="230" cy="520" r="10" class="tension-node"/> <!-- R Ankle -->
+                <circle cx="190" cy="400" r="10" class="tension-node"/> <!-- L Inner Thigh -->
+                <circle cx="210" cy="400" r="10" class="tension-node"/> <!-- R Inner Thigh -->
+                
+                <!-- Connection lines showing force transfer -->
+                <line x1="180" y1="160" x2="200" y2="320" stroke="#0ff" stroke-width="1" opacity="0.3"/>
+                <line x1="220" y1="160" x2="200" y2="320" stroke="#0ff" stroke-width="1" opacity="0.3"/>
+                <line x1="200" y1="120" x2="200" y2="320" stroke="#ff0" stroke-width="2" opacity="0.5"/>
+                <line x1="180" y1="380" x2="170" y2="520" stroke="#0ff" stroke-width="1" opacity="0.3"/>
+                <line x1="220" y1="380" x2="230" y2="520" stroke="#0ff" stroke-width="1" opacity="0.3"/>
+            </svg>
+        </div>
+        
+        <div class="data-section">
+            <h2>PRIMARY TENSION MAXIMA</h2>
+            <div class="node-data">
+                <div class="node-card">
+                    <div class="node-name">Shoulders/Trapezius Junction</div>
+                    <div class="node-psi">847 PSI</div>
+                    <div class="node-description">
+                        Critical load-bearing meets rotation point. This junction processes 73% of upper body tension transfer. Peak stress occurs during the transition between static hold and dynamic movement - the exact moment of "almost moving."
+                    </div>
+                    <div class="metrics">
+                        <div class="metric-row">
+                            <span>Average Daily Load:</span>
+                            <span class="metric-value">2,847 kg/cm²</span>
+                        </div>
+                        <div class="metric-row">
+                            <span>Tension Accumulation Rate:</span>
+                            <span class="metric-value">12.3 N/min</span>
+                        </div>
+                        <div class="metric-row">
+                            <span>Never-Release Index:</span>
+                            <span class="metric-value high-tension">94.7%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="node-card">
+                    <div class="node-name">Lower Back/Sacrum</div>
+                    <div class="node-psi">1,247 PSI</div>
+                    <div class="node-description">
+                        The fulcrum of the entire biomechanical system. This region maintains perpetual isometric contraction at 40-60% maximum voluntary contraction. It never fully relaxes, even during sleep.
+                    </div>
+                    <div class="metrics">
+                        <div class="metric-row">
+                            <span>Compression Force:</span>
+                            <span class="metric-value">3,400 N</span>
+                        </div>
+                        <div class="metric-row">
+                            <span>Shear Stress:</span>
+                            <span class="metric-value">450 N</span>
+                        </div>
+                        <div class="metric-row">
+                            <span>Edge Maintenance:</span>
+                            <span class="metric-value high-tension">CONSTANT</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="node-card">
+                    <div class="node-name">Hip Flexors</div>
+                    <div class="node-psi">923 PSI</div>
+                    <div class="node-description">
+                        The body's center hinge under constant load. Modern seated posture maintains these at 70% contraction for 8-12 hours daily. They exist in a state of permanent "about to stand up."
+                    </div>
+                    <div class="metrics">
+                        <div class="metric-row">
+                            <span>Sustained Contraction:</span>
+                            <span class="metric-value">70-85%</span>
+                        </div>
+                        <div class="metric-row">
+                            <span>Daily Tension Hours:</span>
+                            <span class="metric-value">18.7 hrs</span>
+                        </div>
+                        <div class="metric-row">
+                            <span>Release Frequency:</span>
+                            <span class="metric-value low-tension">0.3/day</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="node-card">
+                    <div class="node-name">Neck/Skull Base</div>
+                    <div class="node-psi">658 PSI</div>
+                    <div class="node-description">
+                        Supporting 10-11 lbs in perpetual cantilever. The suboccipital muscles maintain 24/7 microadjustments at frequencies of 8-12 Hz, creating constant vibrational tension.
+                    </div>
+                    <div class="metrics">
+                        <div class="metric-row">
+                            <span>Cantilever Load:</span>
+                            <span class="metric-value">4.5-5 kg</span>
+                        </div>
+                        <div class="metric-row">
+                            <span>Adjustment Frequency:</span>
+                            <span class="metric-value">8-12 Hz</span>
+                        </div>
+                        <div class="metric-row">
+                            <span>Fatigue Resistance:</span>
+                            <span class="metric-value medium-tension">67%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="node-card">
+                    <div class="node-name">Wrist/Forearm Junction</div>
+                    <div class="node-psi">389 PSI</div>
+                    <div class="node-description">
+                        Complex rotation point under constant micro-tension. Modern device usage maintains isometric contraction at 30-40% MVC for extended periods. The carpal tunnel is a permanent edge state.
+                    </div>
+                    <div class="metrics">
+                        <div class="metric-row">
+                            <span>Micro-movements/hour:</span>
+                            <span class="metric-value">4,200</span>
+                        </div>
+                        <div class="metric-row">
+                            <span>Sustained Load:</span>
+                            <span class="metric-value">30-40% MVC</span>
+                        </div>
+                        <div class="metric-row">
+                            <span>Tension Variability:</span>
+                            <span class="metric-value">±15%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="data-section">
+            <h2>THE SECONDARY NETWORK</h2>
+            <div class="node-data">
+                <div class="node-card">
+                    <div class="node-name">Inner Thighs (Adductors)</div>
+                    <div class="node-psi">445 PSI</div>
+                    <div class="node-description">
+                        Constantly stabilizing, rarely relaxing. These maintain 20-30% baseline tension even at rest. They are the body's gyroscope, always adjusting, never arriving at equilibrium.
+                    </div>
+                    <div class="metrics">
+                        <div class="metric-row">
+                            <span>Baseline Tension:</span>
+                            <span class="metric-value">20-30%</span>
+                        </div>
+                        <div class="metric-row">
+                            <span>Stabilization Events/min:</span>
+                            <span class="metric-value">47</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="node-card">
+                    <div class="node-name">Chest/Pectoralis Insertion</div>
+                    <div class="node-psi">567 PSI</div>
+                    <div class="node-description">
+                        Where breathing meets structure. Every breath creates a tension wave that never quite resolves before the next breath begins. The eternal rhythm of almost-relaxing.
+                    </div>
+                    <div class="metrics">
+                        <div class="metric-row">
+                            <span>Respiratory Load Cycles:</span>
+                            <span class="metric-value">23,000/day</span>
+                        </div>
+                        <div class="metric-row">
+                            <span>Peak Tension Phase:</span>
+                            <span class="metric-value">End-inspiration</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="node-card">
+                    <div class="node-name">Ankles</div>
+                    <div class="node-psi">892 PSI</div>
+                    <div class="node-description">
+                        The forgotten foundation bearing everything above. Proprioceptive micro-adjustments occur at 15-20 Hz, maintaining balance through constant tension modulation.
+                    </div>
+                    <div class="metrics">
+                        <div class="metric-row">
+                            <span>Total Daily Load:</span>
+                            <span class="metric-value">47,000 kg</span>
+                        </div>
+                        <div class="metric-row">
+                            <span>Balance Corrections/sec:</span>
+                            <span class="metric-value">15-20</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="node-card">
+                    <div class="node-name">Jaw/TMJ</div>
+                    <div class="node-psi">1,789 PSI</div>
+                    <div class="node-description">
+                        Highest PSI potential in the body. The masseter can generate 200 lbs of force but typically maintains 5-10% baseline tension. The edge between clenched and relaxed.
+                    </div>
+                    <div class="metrics">
+                        <div class="metric-row">
+                            <span>Maximum Force:</span>
+                            <span class="metric-value high-tension">200 lbs</span>
+                        </div>
+                        <div class="metric-row">
+                            <span>Baseline Tension:</span>
+                            <span class="metric-value">5-10%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="data-section">
+            <h2>THE TOPOLOGY PRINCIPLE</h2>
+            <p style="font-size: 1.2rem; line-height: 1.8; color: #0aa; margin: 1rem 0;">
+                Maximum tension occurs at transition zones - where different muscle groups hand off responsibility. 
+                These are the body's "edges" where forces accumulate but never fully resolve. The human body is 
+                designed to maintain tension, not release it. Every joint is a negotiation that never concludes.
+            </p>
+            
+            <div class="equation">
+                <div class="equation-label">FUNDAMENTAL TENSION EQUATION:</div>
+                T(total) = Σ(T(node) × sin(θ) × e^(-t/τ)) + T(baseline)<br>
+                WHERE:<br>
+                T(node) = Individual node tension (PSI)<br>
+                θ = Angular displacement from neutral<br>
+                t = Time under load (seconds)<br>
+                τ = Tissue fatigue constant<br>
+                T(baseline) = Never-zero minimum tension
+            </div>
+            
+            <div class="equation">
+                <div class="equation-label">FORCE TRANSFER FORMULA:</div>
+                F(transfer) = F(applied) × cos(α) × (1 - μ)<br>
+                WHERE:<br>
+                α = Angle of force application<br>
+                μ = Friction coefficient at junction<br>
+                NOTE: Transfer is never 100% - energy always remains at the junction
+            </div>
+        </div>
+        
+        <div class="tension-meter">
+            <h2>REAL-TIME TENSION ANALYSIS</h2>
+            <div class="meter-display" id="tensionValue">0000 PSI</div>
+            <div class="meter-bar">
+                <div class="meter-fill" id="tensionBar"></div>
+            </div>
+            <div class="controls">
+                <button onclick="scanTension()">SCAN TENSION NODES</button>
+                <button onclick="increaseTension()">INCREASE LOAD</button>
+                <button onclick="approachLimit()">APPROACH LIMIT</button>
+                <button class="danger-button" onclick="releaseTension()">RELEASE (WARNING)</button>
+            </div>
+        </div>
+        
+        <div class="data-section">
+            <h2>TENSION ACCUMULATION MATRIX</h2>
+            <div class="matrix-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Node Location</th>
+                            <th>Static Load (N)</th>
+                            <th>Dynamic Peak (N)</th>
+                            <th>Recovery Time</th>
+                            <th>Edge State Duration</th>
+                            <th>Failure Threshold</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Cervical Spine C1-C2</td>
+                            <td class="medium-tension">450</td>
+                            <td class="high-tension">1,200</td>
+                            <td>Never Complete</td>
+                            <td>∞</td>
+                            <td class="high-tension">2,400 N</td>
+                        </tr>
+                        <tr>
+                            <td>Thoracic T4-T8</td>
+                            <td class="medium-tension">680</td>
+                            <td class="high-tension">1,450</td>
+                            <td>72-96 hours</td>
+                            <td>Perpetual</td>
+                            <td class="high-tension">2,100 N</td>
+                        </tr>
+                        <tr>
+                            <td>Lumbar L4-L5</td>
+                            <td class="high-tension">1,100</td>
+                            <td class="high-tension">3,400</td>
+                            <td>Approaching ∞</td>
+                            <td>Constant</td>
+                            <td class="high-tension">4,500 N</td>
+                        </tr>
+                        <tr>
+                            <td>Sacroiliac Joint</td>
+                            <td class="high-tension">890</td>
+                            <td class="high-tension">2,200</td>
+                            <td>Never Achieved</td>
+                            <td>24/7/365</td>
+                            <td class="high-tension">3,200 N</td>
+                        </tr>
+                        <tr>
+                            <td>Glenohumeral</td>
+                            <td class="medium-tension">340</td>
+                            <td class="high-tension">980</td>
+                            <td>48-72 hours</td>
+                            <td>18-20 hrs/day</td>
+                            <td class="medium-tension">1,400 N</td>
+                        </tr>
+                        <tr>
+                            <td>Iliopsoas Complex</td>
+                            <td class="high-tension">770</td>
+                            <td class="high-tension">1,890</td>
+                            <td>Asymptotic</td>
+                            <td>Eternal</td>
+                            <td class="high-tension">2,600 N</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="data-section">
+            <h2>FORCE VECTOR VISUALIZATION</h2>
+            <div class="vector-display" id="vectorField">
+                <!-- Vectors will be generated by JavaScript -->
+            </div>
+        </div>
+        
+        <div class="data-section">
+            <h2>CLINICAL OBSERVATIONS</h2>
+            <h3>THE PARADOX OF RELEASE</h3>
+            <p style="color: #0aa; line-height: 1.8;">
+                Attempting to fully release tension at any node creates compensatory increases at adjacent nodes. 
+                The system maintains homeostatic tension - approximately 2,400-3,200 PSI total body tension at all times.
+                This is not a flaw. This is the design. The body edges toward relaxation but never arrives.
+            </p>
+            
+            <h3>TEMPORAL TENSION WAVES</h3>
+            <p style="color: #0aa; line-height: 1.8;">
+                Tension migrates through the body in predictable patterns with a period of 90-120 minutes. 
+                Peak tension rotates through major nodes like a standing wave that never dissipates. 
+                Sleep does not eliminate this pattern - it merely shifts the frequency from 12 Hz to 4 Hz.
+            </p>
+            
+            <h3>THE ACCUMULATION PRINCIPLE</h3>
+            <p style="color: #0aa; line-height: 1.8;">
+                Every movement adds tension. Few movements release it. The mathematical result is inevitable: 
+                Total body tension increases logarithmically with age until structural failure. 
+                The only solution is to maintain the edge state - high enough to function, 
+                never so high as to break, never so low as to collapse.
+            </p>
+        </div>
+        
+        <div class="data-section">
+            <h2>ADVANCED BIOMECHANICAL THEOREMS</h2>
+            
+            <div class="equation">
+                <div class="equation-label">THEOREM 1: CONSERVATION OF TENSION</div>
+                ∫(T(t)dt) from 0 to ∞ = CONSTANT<br>
+                Tension cannot be created or destroyed, only transferred between nodes.
+            </div>
+            
+            <div class="equation">
+                <div class="equation-label">THEOREM 2: THE EDGE EQUILIBRIUM</div>
+                lim(t→∞) T(system) = T(critical) - ε<br>
+                WHERE ε → 0 but never equals 0<br>
+                The system approaches but never reaches critical failure.
+            </div>
+            
+            <div class="equation">
+                <div class="equation-label">THEOREM 3: HEISENBERG'S TENSION PRINCIPLE</div>
+                ΔT × Δt ≥ ħ/2<br>
+                You cannot simultaneously know both the exact tension and the exact time to failure.
+                Measuring one changes the other.
+            </div>
+        </div>
+        
+        <div class="warning">
+            FINAL WARNING: This topology reveals that the human body is a tension-maintenance system, 
+            not a tension-release system. Those who seek complete relaxation seek death. 
+            Those who maintain the edge maintain life. The choice is binary. The edge is eternal.
+        </div>
+        
+        <a href="index.html" class="back-link">◀ RETURN TO INDEX</a>
+    </div>
+    
+    <script>
+        // Tension meter simulation
+        let currentTension = 0;
+        let tensionInterval;
+        
+        function updateTensionDisplay() {
+            document.getElementById('tensionValue').textContent = currentTension.toFixed(0).padStart(4, '0') + ' PSI';
+            document.getElementById('tensionBar').style.width = (currentTension / 50) + '%';
+            
+            // Change color based on tension level
+            const bar = document.getElementById('tensionBar');
+            if (currentTension < 1000) {
+                bar.style.background = 'linear-gradient(90deg, #0ff, #0aa)';
+            } else if (currentTension < 2000) {
+                bar.style.background = 'linear-gradient(90deg, #0ff, #ff0)';
+            } else {
+                bar.style.background = 'linear-gradient(90deg, #ff0, #f00)';
+            }
+        }
+        
+        function scanTension() {
+            clearInterval(tensionInterval);
+            currentTension = 0;
+            tensionInterval = setInterval(() => {
+                currentTension += Math.random() * 100;
+                if (currentTension > 2400) currentTension = 2400;
+                updateTensionDisplay();
+            }, 100);
+            
+            setTimeout(() => clearInterval(tensionInterval), 3000);
+        }
+        
+        function increaseTension() {
+            currentTension += 200;
+            if (currentTension > 3000) currentTension = 3000;
+            updateTensionDisplay();
+        }
+        
+        function approachLimit() {
+            clearInterval(tensionInterval);
+            tensionInterval = setInterval(() => {
+                currentTension += (3200 - currentTension) * 0.1;
+                updateTensionDisplay();
+                if (currentTension > 3190) {
+                    currentTension = 2000;
+                }
+            }, 100);
+        }
+        
+        function releaseTension() {
+            clearInterval(tensionInterval);
+            currentTension = 0;
+            updateTensionDisplay();
+            setTimeout(() => {
+                alert('System collapse detected. Tension cannot remain at zero. Homeostatic restoration initiating...');
+                currentTension = 800;
+                updateTensionDisplay();
+            }, 2000);
+        }
+        
+        // Generate force vectors
+        function generateVectors() {
+            const field = document.getElementById('vectorField');
+            for (let i = 0; i < 20; i++) {
+                const vector = document.createElement('div');
+                vector.className = 'vector-line';
+                vector.style.left = Math.random() * 100 + '%';
+                vector.style.top = Math.random() * 100 + '%';
+                vector.style.width = (50 + Math.random() * 150) + 'px';
+                vector.style.transform = `rotate(${Math.random() * 360}deg)`;
+                vector.style.animationDelay = Math.random() * 3 + 's';
+                field.appendChild(vector);
+            }
+        }
+        
+        // Initialize on load
+        window.onload = function() {
+            generateVectors();
+            updateTensionDisplay();
+        };
+    </script>
+</body>
+</html>

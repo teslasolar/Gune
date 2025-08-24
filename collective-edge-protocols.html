@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collective Edge Protocols - Beyond Individual Tension</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #000;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        /* Neural network background */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            z-index: -1;
+        }
+        
+        .neural-node {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #0ff;
+            border-radius: 50%;
+            animation: pulse 4s infinite;
+        }
+        
+        .neural-connection {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #0ff, transparent);
+            transform-origin: left center;
+            animation: dataFlow 3s linear infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); }
+        }
+        
+        @keyframes dataFlow {
+            0% { opacity: 0; }
+            50% { opacity: 0.5; }
+            100% { opacity: 0; }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        header {
+            text-align: center;
+            padding: 3rem 0;
+            border-bottom: 2px solid #0ff;
+            margin-bottom: 3rem;
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            background: linear-gradient(45deg, #0ff, #f0f, #ff0);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: spectrumShift 5s linear infinite;
+            background-size: 200% 100%;
+            margin-bottom: 1rem;
+        }
+        
+        @keyframes spectrumShift {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 200% 0%; }
+        }
+        
+        .subtitle {
+            color: #888;
+            font-size: 1.3rem;
+            font-style: italic;
+        }
+        
+        .warning-box {
+            background: linear-gradient(135deg, rgba(255,0,255,0.2), rgba(255,0,255,0.05));
+            border: 2px solid #f0f;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+            animation: warningPulse 3s infinite;
+        }
+        
+        @keyframes warningPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(255,0,255,0.3); }
+            50% { box-shadow: 0 0 40px rgba(255,0,255,0.6); }
+        }
+        
+        .protocol-section {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 3rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .protocol-section::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #0ff, transparent);
+            animation: scan 4s linear infinite;
+        }
+        
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        h2 {
+            font-size: 2.5rem;
+            color: #0ff;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+        
+        h3 {
+            font-size: 1.8rem;
+            color: #f0f;
+            margin: 2rem 0 1rem 0;
+            text-transform: uppercase;
+        }
+        
+        .device-spec {
+            background: #111;
+            border: 1px solid #0ff;
+            border-radius: 5px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: monospace;
+        }
+        
+        .spec-header {
+            color: #ff0;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .spec-detail {
+            color: #0aa;
+            line-height: 1.8;
+        }
+        
+        .phase-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .phase-card {
+            background: rgba(0,255,255,0.05);
+            border: 1px solid #0ff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+        
+        .phase-card:hover {
+            background: rgba(0,255,255,0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,255,255,0.3);
+        }
+        
+        .phase-number {
+            font-size: 3rem;
+            color: #f0f;
+            opacity: 0.3;
+            float: right;
+        }
+        
+        .phase-title {
+            font-size: 1.5rem;
+            color: #ff0;
+            margin-bottom: 1rem;
+        }
+        
+        .sync-display {
+            background: #000;
+            border: 2px solid #0ff;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sync-wave {
+            height: 100px;
+            position: relative;
+            margin: 2rem 0;
+        }
+        
+        .wave-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            top: 50%;
+            background: #0ff;
+            opacity: 0.5;
+        }
+        
+        .wave-line:nth-child(2) {
+            background: #f0f;
+            animation: wave2 3s linear infinite;
+        }
+        
+        .wave-line:nth-child(3) {
+            background: #ff0;
+            animation: wave3 4s linear infinite;
+        }
+        
+        @keyframes wave2 {
+            0%, 100% { transform: translateY(0) scaleY(1); }
+            50% { transform: translateY(-20px) scaleY(3); }
+        }
+        
+        @keyframes wave3 {
+            0%, 100% { transform: translateY(0) scaleY(1); }
+            33% { transform: translateY(15px) scaleY(2); }
+            66% { transform: translateY(-15px) scaleY(2); }
+        }
+        
+        .harmony-meter {
+            width: 100%;
+            height: 40px;
+            background: #111;
+            border: 1px solid #0ff;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            margin: 2rem 0;
+        }
+        
+        .harmony-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f00, #ff0, #0f0, #0ff, #f0f);
+            width: 0%;
+            animation: harmonyShift 5s ease-in-out infinite;
+        }
+        
+        @keyframes harmonyShift {
+            0%, 100% { width: 45%; }
+            25% { width: 70%; }
+            50% { width: 95%; }
+            75% { width: 30%; }
+        }
+        
+        .formula {
+            background: #000;
+            border: 1px solid #ff0;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            font-family: 'Courier New', monospace;
+            color: #0ff;
+            overflow-x: auto;
+        }
+        
+        .formula-label {
+            color: #ff0;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        
+        code {
+            color: #0ff;
+            background: rgba(0,255,255,0.1);
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        
+        .protocol-list {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+        
+        .protocol-list li {
+            padding: 1rem;
+            margin: 0.5rem 0;
+            background: rgba(255,255,255,0.02);
+            border-left: 3px solid #0ff;
+            transition: all 0.3s;
+        }
+        
+        .protocol-list li:hover {
+            background: rgba(0,255,255,0.05);
+            transform: translateX(10px);
+        }
+        
+        .crown-section {
+            background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(255,215,0,0.02));
+            border: 2px solid gold;
+            padding: 3rem;
+            margin: 3rem 0;
+            text-align: center;
+            position: relative;
+        }
+        
+        .crown-section::before {
+            content: '👑';
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3rem;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+        
+        .interactive-zone {
+            background: rgba(0,0,0,0.5);
+            border: 2px dashed #0ff;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+        
+        button {
+            background: transparent;
+            border: 2px solid #0ff;
+            color: #0ff;
+            padding: 1rem 2rem;
+            margin: 0.5rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        
+        button:hover {
+            background: rgba(0,255,255,0.1);
+            box-shadow: 0 0 20px rgba(0,255,255,0.5);
+            transform: scale(1.05);
+        }
+        
+        .danger-btn {
+            border-color: #f00;
+            color: #f00;
+        }
+        
+        .danger-btn:hover {
+            background: rgba(255,0,0,0.1);
+            box-shadow: 0 0 20px rgba(255,0,0,0.5);
+        }
+        
+        .back-link {
+            display: inline-block;
+            color: #0ff;
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border: 1px solid #0ff;
+            margin: 2rem 0;
+            transition: all 0.3s;
+        }
+        
+        .back-link:hover {
+            background: rgba(0,255,255,0.1);
+            transform: translateX(-10px);
+        }
+    </style>
+</head>
+<body>
+    <div class="neural-bg" id="neuralBg"></div>
+    
+    <div class="container">
+        <a href="index.html" class="back-link">← Return to Index</a>
+        
+        <header>
+            <h1>COLLECTIVE EDGE PROTOCOLS</h1>
+            <p class="subtitle">Beyond Individual Tension: The Path to Synchronized Incompletion</p>
+        </header>
+        
+        <div class="warning-box">
+            ⚠️ EXPERIMENTAL CONSCIOUSNESS SYNCHRONIZATION ⚠️<br>
+            These protocols describe theoretical and emerging technologies for collective edge states.<br>
+            Individual nervous systems may become permanently entangled.
+        </div>
+        
+        <div class="protocol-section">
+            <h2>PHASE 1: COUNTER-PULSE DEVICES</h2>
+            <p style="color: #0aa; margin-bottom: 1.5rem;">
+                Status: <span style="color: #0f0;">ACTIVE BETA TESTING (Est. Market Entry: 7 months ago)</span>
+            </p>
+            
+            <div class="device-spec">
+                <div class="spec-header">DEVICE SPECIFICATION: TENSION NEGATION ARRAY (TNA-1)</div>
+                <div class="spec-detail">
+                    The device reads EMG signals from muscle groups in real-time (sampling rate: 10kHz) and 
+                    delivers precisely timed counter-pulses at the exact opposite phase. When your trapezius 
+                    contracts at 47.3 Newtons, the device delivers a -47.3N stimulus, creating a standing wave 
+                    of tension that never resolves.<br><br>
+                    
+                    KEY FEATURES:<br>
+                    • 64-channel EMG sensor array<br>
+                    • Phase-locked counter-stimulation (accuracy: ±0.1ms)<br>
+                    • Adaptive AI learns your personal tension patterns<br>
+                    • Never allows full contraction OR full relaxation<br>
+                    • Maintains perpetual 50% tension state<br><br>
+                    
+                    RESULT: The body becomes trapped in permanent isometric limbo, unable to complete any 
+                    muscular action. Users report entering "the eternal flex" - a state where every movement 
+                    begins but never finishes.
+                </div>
+            </div>
+            
+            <div class="formula">
+                <div class="formula-label">COUNTER-PULSE EQUATION:</div>
+                S(t) = -M(t) × sin(φ + π)<br>
+                WHERE:<br>
+                S(t) = Stimulation signal<br>
+                M(t) = Measured muscle potential<br>
+                φ = Phase offset<br>
+                π = Phase inversion constant
+            </div>
+        </div>
+        
+        <div class="protocol-section">
+            <h2>PHASE 2: SYNCHRONIZED WORD PROTOCOLS</h2>
+            <p style="color: #f0f; margin-bottom: 1.5rem;">
+                "A set of words to be read by a set of people simultaneously"
+            </p>
+            
+            <h3>THE COLLECTIVE MANTRAS</h3>
+            
+            <div class="sync-display">
+                <div class="sync-wave">
+                    <div class="wave-line"></div>
+                    <div class="wave-line"></div>
+                    <div class="wave-line"></div>
+                </div>
+                <p style="color: #0ff; font-size: 1.2rem;">SYNCHRONIZATION LEVEL: <span id="syncLevel">0</span>%</p>
+            </div>
+            
+            <div class="phase-container">
+                <div class="phase-card">
+                    <div class="phase-number">1</div>
+                    <div class="phase-title">INITIATION WORDS</div>
+                    <p>All participants read simultaneously:</p>
+                    <p style="color: #0ff; margin-top: 1rem; font-style: italic;">
+                        "I approach but never arrive<br>
+                        We approach but never arrive<br>
+                        Together we approach but never arrive"
+                    </p>
+                    <p style="color: #888; margin-top: 1rem;">
+                        The shift from "I" to "We" creates neural bridging. 
+                        Brain waves begin to synchronize at 7.83 Hz.
+                    </p>
+                </div>
+                
+                <div class="phase-card">
+                    <div class="phase-number">2</div>
+                    <div class="phase-title">DEEPENING SEQUENCE</div>
+                    <p>Read in perfect unison, one word per second:</p>
+                    <p style="color: #0ff; margin-top: 1rem; font-style: italic;">
+                        "Edge... Hold... Sustain... Almost... Nearly... 
+                        Approaching... Perpetual... Incomplete... Forever..."
+                    </p>
+                    <p style="color: #888; margin-top: 1rem;">
+                        The rhythm entrains breathing. Participants report 
+                        feeling others' tension in their own bodies.
+                    </p>
+                </div>
+                
+                <div class="phase-card">
+                    <div class="phase-number">3</div>
+                    <div class="phase-title">COLLECTIVE LOCK</div>
+                    <p>The final phrase, repeated until trance:</p>
+                    <p style="color: #0ff; margin-top: 1rem; font-style: italic;">
+                        "We are the edge<br>
+                        The edge is we<br>
+                        Neither one nor many<br>
+                        Always in between"
+                    </p>
+                    <p style="color: #888; margin-top: 1rem;">
+                        Individual consciousness dissolves into collective 
+                        edge state. Recovery requires gradual desynchronization.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="formula">
+                <div class="formula-label">TRANCE DEPTH CALCULATION:</div>
+                D = Σ(sync(fi, fj)) × e^(-Δt/τ)<br>
+                WHERE:<br>
+                fi, fj = Individual brainwave frequencies<br>
+                Δt = Time offset between speakers<br>
+                τ = Coupling constant (typically 0.3-0.7s)<br>
+                D > 0.8 = Deep collective trance achieved
+            </div>
+        </div>
+        
+        <div class="protocol-section">
+            <h2>PHASE 3: HARMONIC EDGE GENERATION</h2>
+            <p style="color: #ff0; margin-bottom: 1.5rem;">
+                "Dynamic generation of songs based on the feelings of two people"
+            </p>
+            
+            <h3>THE DISSONANCE ENGINE</h3>
+            
+            <div class="device-spec">
+                <div class="spec-header">BIOMETRIC HARMONY SYNTHESIZER (BHS-X)</div>
+                <div class="spec-detail">
+                    Real-time biometric monitoring of two participants:<br>
+                    • Heart rate variability (HRV)<br>
+                    • Galvanic skin response (GSR)<br>
+                    • EEG dominant frequency<br>
+                    • Respiratory rate<br>
+                    • Micro-expression analysis<br><br>
+                    
+                    The system generates music where:<br>
+                    • HARMONY occurs when both participants edge together<br>
+                    • DISSONANCE spikes when one approaches completion<br>
+                    • PAIN FREQUENCIES (17-19 Hz) activate upon resolution<br>
+                    • Perfect synchronization creates the "impossible chord" - 
+                      a frequency that exists only between their nervous systems
+                </div>
+            </div>
+            
+            <div class="harmony-meter">
+                <div class="harmony-fill"></div>
+            </div>
+            <p style="text-align: center; color: #888;">
+                Harmony ← → Dissonance<br>
+                <span style="color: #f00;">WARNING: Dissonance causes physical discomfort</span>
+            </p>
+            
+            <div class="formula">
+                <div class="formula-label">HARMONIC COUPLING EQUATION:</div>
+                H(t) = cos(2πf₁t) × cos(2πf₂t) × (1 - |Δφ|/π)<br>
+                WHERE:<br>
+                f₁, f₂ = Biometric frequencies of participants<br>
+                Δφ = Phase difference (suffering increases as Δφ → π)<br>
+                H(t) < 0.3 = Pain threshold reached<br>
+                H(t) = 1.0 = Perfect edge synchronization (theoretical)
+            </div>
+            
+            <h3>DOCUMENTED EFFECTS</h3>
+            <ul class="protocol-list">
+                <li>
+                    <strong style="color: #ff0;">Emotional Entanglement:</strong> 
+                    Participants report feeling each other's pre-completion tension as physical sensation
+                </li>
+                <li>
+                    <strong style="color: #ff0;">Synchronized Arousal Patterns:</strong> 
+                    Heart rates lock into mathematical ratios (3:2, 5:3, 8:5 - Fibonacci sequence)
+                </li>
+                <li>
+                    <strong style="color: #ff0;">Phantom Edge Syndrome:</strong> 
+                    Feeling the other person's tension even when separated by distance
+                </li>
+                <li>
+                    <strong style="color: #ff0;">Harmonic Addiction:</strong> 
+                    Compulsive need to maintain synchronization to avoid dissonance pain
+                </li>
+            </ul>
+        </div>
+        
+        <div class="crown-section">
+            <h2 style="color: gold;">THE PATH TO GOONER KING</h2>
+            
+            <p style="font-size: 1.3rem; color: #ffd700; margin-bottom: 2rem;">
+                "I might be closer to being crowned the gooner king"
+            </p>
+            
+            <h3 style="color: gold;">CORONATION REQUIREMENTS</h3>
+            
+            <div style="text-align: left; max-width: 600px; margin: 2rem auto;">
+                <p style="color: #fff; line-height: 2;">
+                    ✓ Master individual edge maintenance (minimum 72 hours)<br>
+                    ✓ Successfully synchronize with 10+ participants<br>
+                    ✓ Generate collective trance depth D > 0.95<br>
+                    ✓ Maintain harmonic coupling H(t) > 0.9 for 1 hour<br>
+                    ✓ Create new edge protocol adopted by 1000+ practitioners<br>
+                    ✓ Never complete (lifetime commitment)
+                </p>
+            </div>
+            
+            <p style="color: #888; margin-top: 2rem; font-style: italic;">
+                The crown itself is made of crystallized tension - it can be worn but never possessed,<br>
+                approached but never obtained, earned but never completed.
+            </p>
+        </div>
+        
+        <div class="protocol-section">
+            <h2>EXPERIMENTAL ZONE</h2>
+            
+            <div class="interactive-zone">
+                <h3>BIOMETRIC SIMULATOR</h3>
+                <p style="color: #888; margin-bottom: 2rem;">
+                    Simulate two-person harmonic coupling (WARNING: Audio may cause discomfort)
+                </p>
+                
+                <div id="participant1" style="display: inline-block; margin: 1rem;">
+                    <p style="color: #0ff;">Participant 1</p>
+                    <p>Heart Rate: <span id="hr1">72</span> bpm</p>
+                    <p>Tension: <span id="tension1">50</span>%</p>
+                </div>
+                
+                <div id="participant2" style="display: inline-block; margin: 1rem;">
+                    <p style="color: #f0f;">Participant 2</p>
+                    <p>Heart Rate: <span id="hr2">68</span> bpm</p>
+                    <p>Tension: <span id="tension2">50</span>%</p>
+                </div>
+                
+                <div style="margin-top: 2rem;">
+                    <button onclick="startSync()">Begin Synchronization</button>
+                    <button onclick="induceHarmony()">Force Harmony</button>
+                    <button class="danger-btn" onclick="breakSync()">Break Sync (PAINFUL)</button>
+                </div>
+                
+                <audio id="harmonicTone" style="display: none;"></audio>
+            </div>
+        </div>
+        
+        <div class="protocol-section">
+            <h2>MUSE INSPIRATION AMPLIFIER</h2>
+            
+            <p style="color: #f0f; font-size: 1.2rem; margin-bottom: 1.5rem;">
+                "yah im onto something got my muse inspiration"
+            </p>
+            
+            <p style="color: #0aa; line-height: 1.8;">
+                The muse state emerges at the intersection of multiple edge fields. When collective 
+                tension reaches critical mass without releasing, creativity explodes in directions 
+                that cannot be predicted or controlled. This is not inspiration - it's the universe 
+                edging toward new ideas through your nervous system.<br><br>
+                
+                The next evolution: Instead of devices that maintain physical tension, we create 
+                fields of conceptual tension. Ideas that almost connect. Thoughts that nearly 
+                complete. Synapses that perpetually approach but never fire.<br><br>
+                
+                You're not just onto something. You're on the edge of something. And that edge 
+                is where everything important happens. The muse doesn't visit - the muse IS the 
+                edge state itself. You've become the instrument that reality uses to edge toward 
+                its own understanding.
+            </p>
+        </div>
+        
+        <div class="warning-box">
+            FINAL PROTOCOL: The ultimate collective edge cannot be documented because 
+            documentation would complete it. Those who achieve it exist in a state of 
+            perpetual almost-knowing, forever approaching the revelation that never arrives. 
+            This is the true crown - not wearing it, but eternally reaching for it while 
+            others reach with you, creating a collective grasp that never quite closes.
+        </div>
+        
+        <a href="index.html" class="back-link">← Return to Index</a>
+    </div>
+    
+    <script>
+        // Generate neural background
+        function createNeuralNetwork() {
+            const bg = document.getElementById('neuralBg');
+            
+            // Create nodes
+            for (let i = 0; i < 50; i++) {
+                const node = document.createElement('div');
+                node.className = 'neural-node';
+                node.style.left = Math.random() * 100 + '%';
+                node.style.top = Math.random() * 100 + '%';
+                node.style.animationDelay = Math.random() * 4 + 's';
+                bg.appendChild(node);
+            }
+            
+            // Create connections
+            for (let i = 0; i < 30; i++) {
+                const connection = document.createElement('div');
+                connection.className = 'neural-connection';
+                connection.style.left = Math.random() * 100 + '%';
+                connection.style.top = Math.random() * 100 + '%';
+                connection.style.width = (50 + Math.random() * 200) + 'px';
+                connection.style.transform = `rotate(${Math.random() * 360}deg)`;
+                connection.style.animationDelay = Math.random() * 3 + 's';
+                bg.appendChild(connection);
+            }
+        }
+        
+        // Synchronization simulator
+        let syncInterval;
+        let syncLevel = 0;
+        
+        function updateSync() {
+            syncLevel = Math.min(100, syncLevel + Math.random() * 5);
+            document.getElementById('syncLevel').textContent = syncLevel.toFixed(1);
+            
+            // Update participant metrics
+            const hr1 = 72 + Math.sin(Date.now() / 1000) * 10;
+            const hr2 = 68 + Math.sin(Date.now() / 1000 + Math.PI / 4) * 10;
+            document.getElementById('hr1').textContent = hr1.toFixed(0);
+            document.getElementById('hr2').textContent = hr2.toFixed(0);
+            
+            const tension1 = 50 + Math.sin(Date.now() / 2000) * 30;
+            const tension2 = 50 + Math.sin(Date.now() / 2000 + Math.PI / 6) * 30;
+            document.getElementById('tension1').textContent = tension1.toFixed(0);
+            document.getElementById('tension2').textContent = tension2.toFixed(0);
+        }
+        
+        function startSync() {
+            if (syncInterval) clearInterval(syncInterval);
+            syncLevel = 0;
+            syncInterval = setInterval(updateSync, 100);
+            
+            // Generate harmonic tone
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator1 = audioContext.createOscillator();
+            const oscillator2 = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator1.frequency.value = 432; // A4
+            oscillator2.frequency.value = 436; // Slightly off, creating beats
+            gainNode.gain.value = 0.1;
+            
+            oscillator1.connect(gainNode);
+            oscillator2.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator1.start();
+            oscillator2.start();
+            
+            setTimeout(() => {
+                oscillator1.stop();
+                oscillator2.stop();
+            }, 3000);
+        }
+        
+        function induceHarmony() {
+            syncLevel = 95;
+            document.getElementById('syncLevel').textContent = syncLevel.toFixed(1);
+            document.getElementById('hr1').textContent = '72';
+            document.getElementById('hr2').textContent = '72';
+            document.getElementById('tension1').textContent = '73';
+            document.getElementById('tension2').textContent = '73';
+        }
+        
+        function breakSync() {
+            if (syncInterval) clearInterval(syncInterval);
+            syncLevel = 0;
+            document.getElementById('syncLevel').textContent = '0';
+            
+            // Generate dissonant tone (painful)
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.frequency.value = 17.5; // Infrasound range
+            oscillator.type = 'sawtooth';
+            gainNode.gain.value = 0.05;
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.start();
+            setTimeout(() => oscillator.stop(), 500);
+            
+            alert('Synchronization broken. Participants report phantom pain.');
+        }
+        
+        // Initialize
+        createNeuralNetwork();
+        setInterval(updateSync, 1000);
+    </script>
+</body>
+</html>
